@@ -10,6 +10,10 @@ const newEventFor = function (url) {
   }
 }
 
+test.afterEach.always(t => {
+  urlStore.clear()
+})
+
 test.cb('accept valid url', t => {
   const url = 'example.com:80/index.html'
   getInfo.handler(newEventFor(url), {}, (err, response) => {
@@ -29,13 +33,27 @@ test.cb('handle missing url', t => {
   })
 })
 
-test.cb('handle invalid url', t => {
+test.cb('handle malware url', t => {
   const url = 'example.com:80/malware.html'
   urlStore.put(url, { malware: true })
+
   getInfo.handler(newEventFor(url), {}, (err, response) => {
     t.is(err, null)
     t.is(response.statusCode, 403)
     t.is(JSON.parse(response.body).message, 'url is malware: ' + url)
+    t.end()
+  })
+})
+
+test.cb('handle malware domain', t => {
+  const domain = 'malware.com:80'
+  urlStore.put(domain, { malware: true })
+
+  const url = 'malware.com:80/page.html'
+  getInfo.handler(newEventFor(url), {}, (err, response) => {
+    t.is(err, null)
+    t.is(response.statusCode, 403)
+    t.is(JSON.parse(response.body).message, 'url is malware: ' + domain)
     t.end()
   })
 })

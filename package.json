@@ -5,6 +5,7 @@
   "scripts": {
     "deploy": "serverless deploy",
     "deploy:prd": "serverless deploy --stage prd --region us-east-2",
+    "standard": "standard",
     "test": "ava test/*.js"
   },
   "repository": {
@@ -17,6 +18,7 @@
   "devDependencies": {
     "ava": "0.22.0",
     "aws-sdk": "2.126.0",
-    "serverless": "1.23.0"
+    "serverless": "1.23.0",
+    "standard": "10.0.3"
   }
 }
