@@ -4,6 +4,7 @@
   "description": "Service for looking up information about specific urls",
   "scripts": {
     "deploy": "serverless deploy",
+    "deploy:prd": "serverless deploy --stage prd --region us-east-2",
     "test": "ava test/*.js"
   },
   "repository": {
