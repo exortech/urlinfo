@@ -1,4 +1,5 @@
 'use strict'
+
 const URL = require('url')
 const urlStore = require('./memoryUrlStore')
 
@@ -23,5 +24,8 @@ module.exports.handler = (event, context, callback) => {
       return callback(null, makeResponse(403, 'url is malware: ' + urlInfo.url, event))
     }
     callback(null, makeResponse(200, 'url is valid: ' + event.pathParameters.proxy, event))
+  }).catch(err => {
+    console.error(err)
+    callback(err)
   })
 }

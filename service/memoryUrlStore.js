@@ -1,14 +1,4 @@
-
-class UrlInfo {
-  constructor (url, info) {
-    this.url = url
-    this.info = info || {}
-  }
-
-  isMalware () {
-    return !!this.info.malware
-  }
-}
+const UrlInfo = require('./urlinfo')
 
 const store = new Map()
 

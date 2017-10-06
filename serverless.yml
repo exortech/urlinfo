@@ -7,9 +7,25 @@ provider:
 
 functions:
   getInfo:
-    handler: service/get-info.handler
+    handler: service/getInfo.handler
     events:
       - http: get urlinfo/1/{proxy+}
+
+resources:
+  Resources:
+    urlInfoTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: urlInfo
+        AttributeDefinitions:
+          - AttributeName: url
+            AttributeType: S
+        KeySchema:
+          - AttributeName: url
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 
 package:
   exclude:

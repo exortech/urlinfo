@@ -1,5 +1,5 @@
 import test from 'ava'
-import getInfo from '../service/get-info'
+import getInfo from '../service/getInfo'
 import urlStore from '../service/memoryUrlStore'
 
 const newEventFor = function (url) {
