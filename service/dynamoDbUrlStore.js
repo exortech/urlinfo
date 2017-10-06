@@ -2,23 +2,39 @@ const AWS = require('aws-sdk')
 const UrlInfo = require('./urlInfo')
 
 const urlStoreTable = 'urlInfo'
-const dynamodb = new AWS.DynamoDB.DocumentClient({
-  region: 'localhost',
-  endpoint: 'http://localhost:4567'
-})
 
-module.exports.fetch = url => {
-  const params = {
-    TableName: urlStoreTable,
-    Key: {
-      url: url.host + url.path
-    }
+module.exports = class DynamoDbUrlStore {
+  constructor (awsConfig) {
+    this.dynamodb = new AWS.DynamoDB.DocumentClient(awsConfig)
   }
 
-  return dynamodb.get(params).promise().then(result => {
-    if (result && result.Item) {
-      return new UrlInfo(result.Item.url, result.Item)
+  fetch (url) {
+    const params = {
+      TableName: urlStoreTable,
+      Key: {
+        url: url.host + url.path
+      }
     }
-    return null
-  })
+
+    return this.dynamodb.get(params).promise().then(result => {
+      if (result && result.Item) {
+        return new UrlInfo(result.Item.url, result.Item)
+      }
+      return null
+    })
+  }
+
+  put (url, info) {
+    const putParams = {
+      TableName: urlStoreTable,
+      Item: {
+        url,
+        threat: info.threat,
+        discovered_ts: info.discovered_ts,
+        scanned_ts: info.scanned_ts
+      }
+    }
+
+    return this.dynamodb.put(putParams).promise()
+  }
 }

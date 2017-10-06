@@ -1,7 +1,6 @@
 'use strict'
 
 const URL = require('url')
-const urlStore = require('./memoryUrlStore')
 
 const makeResponse = function (statusCode, message, input) {
   return {
@@ -14,6 +13,8 @@ const makeResponse = function (statusCode, message, input) {
 }
 
 module.exports.handler = (event, context, callback) => {
+  const urlStore = context.store || new (require('./memoryUrlStore'))()
+
   if (!event || !event.pathParameters || !event.pathParameters.proxy) {
     return callback(null, makeResponse(400, 'url is missing'))
   }
