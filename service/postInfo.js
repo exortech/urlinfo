@@ -19,13 +19,12 @@ module.exports.handler = (event, context, callback) => {
   if (!event || !event.pathParameters || !event.pathParameters.proxy) {
     return callback(null, makeResponse(400, 'url is missing'))
   }
-  const url = URL.parse('//' + event.pathParameters.proxy, true, true)
+  const url = event.pathParameters.proxy
+  const info = JSON.parse(event.body)
 
-  urlStore.fetch(url).then(urlInfo => {
-    if (urlInfo && urlInfo.shouldBlock()) {
-      return callback(null, makeResponse(403, 'url is malware: ' + urlInfo.url, event))
-    }
-    callback(null, makeResponse(200, 'url is valid: ' + event.pathParameters.proxy, event))
+  console.log(`Storing url ${url} with info ${JSON.stringify(info)}`)
+  urlStore.put(url, info).then(result => {
+    callback(null, makeResponse(200, 'info has been stored for: ' + event.pathParameters.proxy, event))
   }).catch(err => {
     console.error(err)
     callback(err)

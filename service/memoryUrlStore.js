@@ -1,4 +1,4 @@
-const UrlInfo = require('./urlinfo')
+const UrlInfo = require('./urlInfo')
 
 module.exports = class MemoryUrlStore {
   constructor () {

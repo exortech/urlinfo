@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk')
 const UrlInfo = require('./urlInfo')
 
-const urlStoreTable = 'urlInfo'
+const urlStoreTable = process.env.DYNAMODB_TABLE || 'urlInfo'
 
 module.exports = class DynamoDbUrlStore {
   constructor (awsConfig) {
@@ -16,6 +16,7 @@ module.exports = class DynamoDbUrlStore {
       }
     }
 
+    console.log(params)
     return this.dynamodb.get(params).promise().then(result => {
       if (result && result.Item) {
         return new UrlInfo(result.Item.url, result.Item)
@@ -30,11 +31,12 @@ module.exports = class DynamoDbUrlStore {
       Item: {
         url,
         threat: info.threat,
-        discovered_ts: info.discovered_ts,
-        scanned_ts: info.scanned_ts
+        discovered_ts: info.discovered_ts || new Date().toISOString(),
+        scanned_ts: info.scanned_ts || new Date().toISOString()
       }
     }
 
+    console.log(putParams)
     return this.dynamodb.put(putParams).promise()
   }
 }

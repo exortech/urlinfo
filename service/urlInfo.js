@@ -4,10 +4,6 @@ module.exports = class UrlInfo {
     this.info = info || {}
   }
 
-  isMalware () {
-    return !!this.info.malware
-  }
-
   shouldBlock () {
     return !!this.info.threat
   }
