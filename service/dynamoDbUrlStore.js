@@ -12,7 +12,7 @@ module.exports = class DynamoDbUrlStore {
     const params = {
       TableName: urlStoreTable,
       Key: {
-        url: url.host + url.path
+        url: url.host + (url.path || '')
       }
     }
 

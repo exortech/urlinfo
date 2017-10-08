@@ -25,5 +25,20 @@ test('add url to store', t => {
   const url = 'malware.com:80/mw.html'
   return urlStore.put(url, { url, threat: 'virus' }).then(result => {
     t.truthy(result, null)
+    return urlStore.fetch(URL.parse('//' + url, true, true)).then(result => {
+      t.not(result, null)
+      t.is(result.url, url)
+    })
+  })
+})
+
+test('add domain url to store', t => {
+  const url = 'malware.com:80'
+  return urlStore.put(url, { url, threat: 'virus' }).then(result => {
+    t.truthy(result, null)
+    return urlStore.fetch(URL.parse('//' + url, true, true)).then(result => {
+      t.not(result, null)
+      t.is(result.url, url)
+    })
   })
 })
