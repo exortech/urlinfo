@@ -10,16 +10,24 @@ module.exports = class DynamoDbUrlStore {
 
   fetch (url) {
     const params = {
-      TableName: urlStoreTable,
-      Key: {
-        url: url.host + (url.path || '')
+      RequestItems: {
+        [urlStoreTable]: {
+          Keys: [{
+            url: url.host
+          }]
+        }
       }
+    }
+    if (url.path) {
+      params.RequestItems[urlStoreTable].Keys.push({ url: url.host + url.path })
     }
 
     console.log(params)
-    return this.dynamodb.get(params).promise().then(result => {
-      if (result && result.Item) {
-        return new UrlInfo(result.Item.url, result.Item)
+    return this.dynamodb.batchGet(params).promise().then(result => {
+      if (result && result.Responses && result.Responses[urlStoreTable] && result.Responses[urlStoreTable].length) {
+        const responses = result.Responses[urlStoreTable]
+        // TODO: returning the first match - may be better to return most specific match
+        return new UrlInfo(responses[0].url, responses[0])
       }
       return null
     })
