@@ -1,10 +1,18 @@
 const dynalite = require('dynalite')
 const AWS = require('aws-sdk')
-const dynamodb = new AWS.DynamoDB({
+
+const port = 4567
+const dynamoConfig = {
   region: 'localhost',
-  endpoint: 'http://localhost:4567'
-})
-const tableName = 'urlInfo'
+  endpoint: 'http://localhost:' + port
+}
+const dynamodb = new AWS.DynamoDB(dynamoConfig)
+
+const dynamoUrlStore = new (require('../service/dynamoDbUrlStore'))(dynamoConfig)
+const memoryUrlFilter = new (require('../service/memoryUrlFilter'))()
+const urlStore = new (require('../service/filteredUrlStore'))(memoryUrlFilter, dynamoUrlStore)
+
+const tableName = dynamoUrlStore.tableName()
 
 const createTable = function () {
   console.log('Creating DynamoDB table:', tableName)
@@ -32,24 +40,15 @@ const createTable = function () {
 }
 
 const putItem = function (url, threat = 'malware') {
-  console.log(`Writing '${url} - ${threat}' to ${tableName}`)
-  return dynamodb.putItem({
-    TableName: tableName,
-    Item: {
-      url: { S: url },
-      threat: { S: threat },
-      discovered_ts: { S: new Date().toISOString() },
-      scanned_ts: { S: new Date().toISOString() }
-    }
-  }).promise()
+  return urlStore.put(url, { url, threat })
 }
 
 const dynaliteServer = dynalite({ createTableMs: 0 })
-dynaliteServer.listen(4567, function (err) {
+dynaliteServer.listen(port, function (err) {
   if (err) {
     throw err
   }
-  console.log('Dynalite started on port 4567')
+  console.log('Dynalite started on port', port)
 
   return createTable().then(() => {
     return Promise.all([

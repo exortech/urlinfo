@@ -5,6 +5,7 @@
   "scripts": {
     "deploy": "serverless deploy",
     "deploy:prd": "serverless deploy --stage prd --region us-east-2",
+    "postinstall": "cd service && yarn install && cd ..",
     "standard": "standard",
     "start-dynalite": "node test-integration/startDynalite",
     "test": "ava test/*Test.js",

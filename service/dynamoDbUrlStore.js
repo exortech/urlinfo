@@ -43,8 +43,11 @@ module.exports = class DynamoDbUrlStore {
         scanned_ts: info.scanned_ts || new Date().toISOString()
       }
     }
-
-    console.log(putParams)
+    console.log(`Storing ${url} in dynamo: ${JSON.stringify(info)}`)
     return this.dynamodb.put(putParams).promise()
+  }
+
+  tableName () {
+    return urlStoreTable
   }
 }

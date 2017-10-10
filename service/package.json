@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "bloom-filters": "0.5.1"
+    "bloom-filters": "0.5.1",
+    "redis": "2.8.0"
   }
 }
