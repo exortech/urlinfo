@@ -22,7 +22,7 @@ module.exports = class DynamoDbUrlStore {
       params.RequestItems[urlStoreTable].Keys.push({ url: url.host + url.path })
     }
 
-    console.log(params)
+    console.log('Checking DynamoDb:', params)
     return this.dynamodb.batchGet(params).promise().then(result => {
       if (result && result.Responses && result.Responses[urlStoreTable] && result.Responses[urlStoreTable].length) {
         const responses = result.Responses[urlStoreTable]
@@ -43,8 +43,11 @@ module.exports = class DynamoDbUrlStore {
         scanned_ts: info.scanned_ts || new Date().toISOString()
       }
     }
-    console.log(`Storing ${url} in dynamo: ${JSON.stringify(info)}`)
-    return this.dynamodb.put(putParams).promise()
+    console.log(`Storing ${url} in dynamo: ${JSON.stringify(putParams)}`)
+    return this.dynamodb.put(putParams).promise().then(r => {
+      console.log(`Stored ${url} in dynamo`)
+      return r
+    })
   }
 
   tableName () {

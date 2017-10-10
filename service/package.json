@@ -2,6 +2,7 @@
   "dependencies": {
     "bloom-filters": "0.5.1",
     "bloom-redis": "github:exortech/bloom-redis",
-    "redis": "2.8.0"
+    "redis": "2.8.0",
+    "util-promisify": "2.1.0"
   }
 }

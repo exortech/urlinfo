@@ -1,6 +1,8 @@
 'use strict'
 
 const DynamoDbUrlStore = require('./dynamoDbUrlStore')
+const RedisUrlFilter = require('./redisUrlFilter')
+const FilteredUrlStore = require('./filteredUrlStore')
 
 const makeResponse = function (statusCode, message, input) {
   return {
@@ -13,7 +15,7 @@ const makeResponse = function (statusCode, message, input) {
 }
 
 module.exports.handler = (event, context, callback) => {
-  const urlStore = context.store || new DynamoDbUrlStore()
+  const urlStore = context.store || new FilteredUrlStore(new RedisUrlFilter(), new DynamoDbUrlStore())
 
   if (!event || !event.pathParameters || !event.pathParameters.proxy) {
     return callback(null, makeResponse(400, 'url is missing'))

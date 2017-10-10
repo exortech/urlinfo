@@ -6,6 +6,16 @@ provider:
   profile: exortech
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    REDIS_HOST: urlfilter.08egg7.0001.use1.cache.amazonaws.com
+    LAMBDA_EXEC_SG: sg-7d339505
+    SUBNET_A_PRIVATE: subnet-53fc500b
+    SUBNET_B_PRIVATE: subnet-1899f125
+  vpc:
+    securityGroupIds:
+        - "${self:provider.environment.LAMBDA_EXEC_SG}"
+    subnetIds:
+        - "${self:provider.environment.SUBNET_A_PRIVATE}"
+        - "${self:provider.environment.SUBNET_B_PRIVATE}"
   iamRoleStatements:
     - Effect: Allow
       Action:

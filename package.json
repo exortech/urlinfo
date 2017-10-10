@@ -8,7 +8,8 @@
     "postinstall": "cd service && yarn install && cd ..",
     "standard": "standard",
     "start-dynalite": "node test-integration/startDynalite",
-    "test": "ava test/*Test.js",
+    "test": "yarn test:unit && yarn test:integration",
+    "test:unit": "ava test/*Test.js",
     "test:integration": "ava test-integration/*Test.js"
   },
   "repository": "git+https://github.com/exortech/urlinfo.git",

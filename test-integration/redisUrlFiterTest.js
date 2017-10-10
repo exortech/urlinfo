@@ -2,6 +2,8 @@ import test from 'ava'
 import URL from 'url'
 const urlFilter = new (require('../service/redisUrlFilter'))()
 
+// NB: requires a local redis running on the default port (6379)
+
 test('add to filter and verify', t => {
   const url = 'malware-redis:80/thest.html'
   return urlFilter.add(url).then(res => {

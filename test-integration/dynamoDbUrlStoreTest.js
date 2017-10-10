@@ -1,5 +1,9 @@
 import test from 'ava'
 import URL from 'url'
+
+// NB: requires a local dynalite instance running  on the default port (4567)
+// Dynalite should be started using `yarn start-dynalite`
+
 const urlStore = new (require('../service/dynamoDbUrlStore'))({
   region: 'localhost',
   endpoint: 'http://localhost:4567'
