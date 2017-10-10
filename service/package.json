@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "bloom-filters": "0.5.1"
+  }
+}

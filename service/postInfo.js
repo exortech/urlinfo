@@ -1,6 +1,5 @@
 'use strict'
 
-const URL = require('url')
 const DynamoDbUrlStore = require('./dynamoDbUrlStore')
 
 const makeResponse = function (statusCode, message, input) {

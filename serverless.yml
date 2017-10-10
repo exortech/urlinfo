@@ -49,4 +49,5 @@ package:
   exclude:
     - ./**
   include:
-    - service/**
+    - service/**/*.js
+    - service/node_modules/**

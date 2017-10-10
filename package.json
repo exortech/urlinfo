@@ -10,10 +10,7 @@
     "test": "ava test/*Test.js",
     "test:integration": "ava test-integration/*Test.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/exortech/urlinfo.git"
-  },
+  "repository": "git+https://github.com/exortech/urlinfo.git",
   "author": "Owen Rogers",
   "license": "MIT",
   "homepage": "https://github.com/exortech/urlinfo#readme",
