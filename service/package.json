@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "bloom-filters": "0.5.1",
+    "bloom-redis": "github:exortech/bloom-redis",
     "redis": "2.8.0"
   }
 }

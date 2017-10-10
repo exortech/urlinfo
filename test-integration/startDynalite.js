@@ -9,8 +9,8 @@ const dynamoConfig = {
 const dynamodb = new AWS.DynamoDB(dynamoConfig)
 
 const dynamoUrlStore = new (require('../service/dynamoDbUrlStore'))(dynamoConfig)
-const memoryUrlFilter = new (require('../service/memoryUrlFilter'))()
-const urlStore = new (require('../service/filteredUrlStore'))(memoryUrlFilter, dynamoUrlStore)
+const redisUrlFilter = new (require('../service/redisUrlFilter'))()
+const urlStore = new (require('../service/filteredUrlStore'))(redisUrlFilter, dynamoUrlStore)
 
 const tableName = dynamoUrlStore.tableName()
 
@@ -36,6 +36,9 @@ const createTable = function () {
     }
   }).promise().then(() => {
     return dynamodb.describeTable({ TableName: tableName }).promise()
+  }).then(() => {
+    console.log('clearing local redis key')
+    return redisUrlFilter.clear()
   })
 }
 
