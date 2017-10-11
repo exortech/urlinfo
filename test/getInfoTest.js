@@ -2,12 +2,16 @@ import test from 'ava'
 import getInfo from '../service/getInfo'
 import MemoryUrlStore from '../service/memoryUrlStore'
 
-const newEventFor = function (url) {
-  return {
+const newEventFor = function (url, queryParams) {
+  const event = {
     pathParameters: {
       proxy: url
     }
   }
+  if (queryParams) {
+    event.queryStringParameters = queryParams
+  }
+  return event
 }
 
 test.cb('accept valid url', t => {
@@ -52,6 +56,16 @@ test.cb('handle malware domain', t => {
     t.is(err, null)
     t.is(response.statusCode, 403)
     t.is(JSON.parse(response.body).message, 'url is malware: ' + domain)
+    t.end()
+  })
+})
+
+test.cb('handle querystring parameters', t => {
+  const url = 'malware.com:80/page.html?foo=bar&baz=qux'
+  getInfo.handler(newEventFor('malware.com:80/page.html', { foo: 'bar', baz: 'qux' }), { store: new MemoryUrlStore() }, (err, response) => {
+    t.is(err, null)
+    t.is(response.statusCode, 200)
+    t.is(JSON.parse(response.body).message, 'url is valid: ' + url)
     t.end()
   })
 })

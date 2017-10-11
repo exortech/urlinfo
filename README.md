@@ -30,8 +30,6 @@ The service does a recursive check against URLs in its data store. For example, 
 
 The purpose of the recursive matching is so that pages (regardless of query string params) and full domains can be flagged as a source of malware.
 
-Matching is case-insensitive: URLs will be lowercased before being matched.
-
 The route will return:
 * _200 OK_ HTTP status code if the client can access the URL (eg. it is a source of malware)
 * _403 Forbidden_ HTTP status code if the URL is blocked because it is a known source of malware
@@ -137,3 +135,4 @@ As the Lambda functions need to access Elasticache, this means that the Lambda a
 - switch from Bloom filter to Cuckoo filter for redisUrlFilter for speed and to support removing URLs from filter.
 - run load tests. The currently provisioned infrastructure is inadequate to be indicative of how the system will respond as load ramps of. Would need to provision more production-ready infrastructure to sustain more significant load.
 - deploy to other regions. Currently this service is only accessible in a single region, but to scale this out, it should be available in as many regions as possible to bring the service close to the consumer.
+- set up an automated build service like TravisCI.

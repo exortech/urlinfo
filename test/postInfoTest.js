@@ -20,3 +20,15 @@ test.cb('store url', t => {
     t.end()
   })
 })
+
+test.cb('matching domain should be case insensitive', t => {
+  const url = 'example.com:80/malware.html'
+  const urlStore = new MemoryUrlStore()
+
+  postInfo.handler(newEventFor('examPle.com:80/malware.html', { threat: 'virus' }), { store: urlStore }, (err, response) => {
+    t.is(err, null)
+    t.is(response.statusCode, 200)
+    t.truthy(urlStore.store.get(url))
+    t.end()
+  })
+})

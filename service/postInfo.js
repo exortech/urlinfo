@@ -1,5 +1,6 @@
 'use strict'
 
+const UrlInfo = require('./urlInfo')
 const DynamoDbUrlStore = require('./dynamoDbUrlStore')
 const RedisUrlFilter = require('./redisUrlFilter')
 const FilteredUrlStore = require('./filteredUrlStore')
@@ -20,12 +21,12 @@ module.exports.handler = (event, context, callback) => {
   if (!event || !event.pathParameters || !event.pathParameters.proxy) {
     return callback(null, makeResponse(400, 'url is missing'))
   }
-  const url = event.pathParameters.proxy
+  const url = UrlInfo.parseUrl(event.pathParameters.proxy, event.queryStringParameters)
   const info = JSON.parse(event.body)
 
-  console.log(`Storing url ${url} with info ${JSON.stringify(info)}`)
-  urlStore.put(url, info).then(result => {
-    callback(null, makeResponse(200, 'info has been stored for: ' + event.pathParameters.proxy, event))
+  console.log(`Storing url ${url.requestedUrl} with info ${JSON.stringify(info)}`)
+  urlStore.put(url.requestedUrl, info).then(result => {
+    callback(null, makeResponse(200, 'info has been stored for: ' + url.requestedUrl, event))
   }).catch(err => {
     console.error(err)
     callback(err)

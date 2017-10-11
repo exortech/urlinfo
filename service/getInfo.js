@@ -1,6 +1,6 @@
 'use strict'
 
-const URL = require('url')
+const UrlInfo = require('./urlInfo')
 const DynamoDbUrlStore = require('./dynamoDbUrlStore')
 const RedisUrlFilter = require('./redisUrlFilter')
 const FilteredUrlStore = require('./filteredUrlStore')
@@ -21,13 +21,12 @@ module.exports.handler = (event, context, callback) => {
   if (!event || !event.pathParameters || !event.pathParameters.proxy) {
     return callback(null, makeResponse(400, 'url is missing'))
   }
-  const url = URL.parse('//' + event.pathParameters.proxy, true, true)
-
+  const url = UrlInfo.parseUrl(event.pathParameters.proxy, event.queryStringParameters)
   urlStore.fetch(url).then(urlInfo => {
     if (urlInfo && urlInfo.shouldBlock()) {
       return callback(null, makeResponse(403, 'url is malware: ' + urlInfo.url, event))
     }
-    callback(null, makeResponse(200, 'url is valid: ' + event.pathParameters.proxy, event))
+    callback(null, makeResponse(200, 'url is valid: ' + url.requestedUrl, event))
   }).catch(err => {
     console.error(err)
     callback(err)
