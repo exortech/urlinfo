@@ -10,6 +10,8 @@ The service consists of two entry points:
 
 ### getInfo
 
+![](docs/getInfo.png)
+
 This function is accessible via the route:
 
 `GET /urlinfo/1/{hostname_and_port}/{original_path_and_query_string}`
@@ -35,6 +37,8 @@ The route will return:
 * _403 Forbidden_ HTTP status code if the URL is blocked because it is a known source of malware
 
 ### postInfo
+
+![](docs/postInfo.png)
 
 This function is accessible via the route:
 
